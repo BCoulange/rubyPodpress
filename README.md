@@ -1,4 +1,4 @@
-ruyPodpress
-===========
+# Post a podcast with a ruby script
 
-Scripts to automate podcast post to podpress
+* Source of idea : 
+- http://humbuckercode.co.uk/licks/code/post-to-wordpress-with-ruby-update/
