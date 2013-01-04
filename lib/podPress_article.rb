@@ -6,9 +6,9 @@ require 'net/http'
 # Please note that the vanilla wp-json-api plugin does not support user authentication for create_post.
 # Check out my fork for authentication support: https://github.com/Achillefs/wp-json-api
 class Article
-  API_URI = 'http://mywpblog.com/api/'
-  API_USER = 'my_wp_username'
-  API_PASS = 'my_wp_pass'
+  API_URI = 'http://www.podcastscience.fm/api/'
+  API_USER = 'blabla'
+  API_PASS = 'blabla'
   
   attr_accessor :title, :content, :categories, :tags, :type
   
