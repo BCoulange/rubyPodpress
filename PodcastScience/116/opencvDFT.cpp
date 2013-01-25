@@ -45,30 +45,35 @@ int main(int argc, char ** argv)
 
 
 // Création et initialisation du vecteur
-std::vector <float> ivec;
+//std::vector <float> ivec;
  
 
-    // compute sum of positive matrix elements, iterator-based variant
+// compute sum of positive matrix elements, iterator-based variant
 
-    double sum=0;
-    MatConstIterator_<float> it = magI.begin<float>(), it_end = magI.end<float>();
-    for(; it != it_end; ++it)
-       ivec.push_back (*it);
+//    double sum=0;
+//    MatConstIterator_<float> it = magI.begin<float>(), it_end = magI.end<float>();
+//    for(; it != it_end; ++it)
+//       ivec.push_back (*it);
 
 // Tri du vecteur grâce à la fonction std::sort
-std::sort (ivec.begin(), ivec.end(), std::greater <float>());
+//std::sort (ivec.begin(), ivec.end(), std::greater <float>());
 
-//std::sort (magI.begin<float>(), magI.end<float>(), std::greater <float>());
+Mat sorted;
+magI.copyTo(sorted);
+
+std::sort (sorted.begin<float>(), sorted.end<float>(), std::greater <float>());
+MatConstIterator_<float> it = magI.begin<float>();
+float seuil = it[nbCoeff2Keep];
 
 //for (vector<float>::iterator it2 = ivec.begin(); it2!=ivec.begin()+nbCoeff2Keep; ++it2) 
 //    cout << *it2 << endl;
 
-cout << ivec[nbCoeff2Keep] << endl;
+//cout << ivec[nbCoeff2Keep] << endl;
 
 // acceder aux valeurs des pixels et les changer!!!
 for(int i=1;i<magI.rows;i++)
     for(int j=1;j<magI.cols;j++){
-        magI.at<float>(i,j) = magI.at<float>(i,j)>ivec[nbCoeff2Keep]?magI.at<float>(i,j):0.;
+        magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
     }
 
 
