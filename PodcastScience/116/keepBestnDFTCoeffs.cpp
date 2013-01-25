@@ -69,7 +69,15 @@ int main(int argc, char ** argv)
     magI += Scalar::all(1);                    // switch to logarithmic scale
     log(magI, magI);
 
+// CONCAT 2 STRINGDS
+//    char ret[128];
+//    *ret = 0;
+//    for (int i = 0; i < argc; i++)
+//    { 
+//         strcat(ret,argv[i]);
+//    }
 
+    cout <<  ret  << endl;
 
     cout << nbKept << " ont été gardés." << endl;
 
