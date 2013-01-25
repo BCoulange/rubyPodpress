@@ -10,8 +10,7 @@ int main(int argc, char ** argv)
 {
     const char* filename = argc >=2 ? argv[1] : "lena.jpg";
 
-
-    int nbCoeff2Keep = argc >= 3 ? atoi(argv[2]) : -1 ;
+    int nbCoeff2Keep = argc >= 3 ? atoi(argv[2]) : -1 ; // nb coeff on veut garder
 
     // Chargement de l'image
     Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
@@ -33,47 +32,27 @@ int main(int argc, char ** argv)
     // compute the magnitude and switch to logarithmic scale
     // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
     split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
-    magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
-    Mat magI = planes[0];
+    Mat magI;    
+    magnitude(planes[0], planes[1], magI);     // calcul du module
+    
 
     magI += Scalar::all(1);                    // switch to logarithmic scale
     log(magI, magI);
 
 
+    // tri des elements de la matrice
+    Mat sorted;
+    magI.copyTo(sorted); // copy de la matrice à trier pour ne pas perdre la pos des pixels
+    std::sort (sorted.begin<float>(), sorted.end<float>(), std::greater <float>());
+    
+    // Récupération du seuil
+    MatConstIterator_<float> it = magI.begin<float>();
+    float seuil = it[nbCoeff2Keep];
 
-
-
-
-// Création et initialisation du vecteur
-//std::vector <float> ivec;
- 
-
-// compute sum of positive matrix elements, iterator-based variant
-
-//    double sum=0;
-//    MatConstIterator_<float> it = magI.begin<float>(), it_end = magI.end<float>();
-//    for(; it != it_end; ++it)
-//       ivec.push_back (*it);
-
-// Tri du vecteur grâce à la fonction std::sort
-//std::sort (ivec.begin(), ivec.end(), std::greater <float>());
-
-Mat sorted;
-magI.copyTo(sorted);
-
-std::sort (sorted.begin<float>(), sorted.end<float>(), std::greater <float>());
-MatConstIterator_<float> it = magI.begin<float>();
-float seuil = it[nbCoeff2Keep];
-
-//for (vector<float>::iterator it2 = ivec.begin(); it2!=ivec.begin()+nbCoeff2Keep; ++it2) 
-//    cout << *it2 << endl;
-
-//cout << ivec[nbCoeff2Keep] << endl;
-
-// acceder aux valeurs des pixels et les changer!!!
-for(int i=1;i<magI.rows;i++)
-    for(int j=1;j<magI.cols;j++){
-        magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
+    // seuillage (il existe sans doute une fonction built in)
+    for(int i=1;i<magI.rows;i++)
+        for(int j=1;j<magI.cols;j++){
+            magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
     }
 
 
