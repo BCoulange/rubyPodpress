@@ -50,10 +50,25 @@ int main(int argc, char ** argv)
     float seuil = it[nbCoeff2Keep];
 
     // seuillage (il existe sans doute une fonction built in)
-    for(int i=1;i<magI.rows;i++)
-        for(int j=1;j<magI.cols;j++){
-            magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
+    int nbKept=0;
+
+
+    for(int i=0;i<magI.rows;i++)
+        for(int j=0;j<magI.cols;j++){
+            if(magI.at<float>(i,j)<seuil || nbKept >= nbCoeff2Keep){
+                planes[0].at<float>(i,j) = 0.;
+                planes[1].at<float>(i,j) = 0.;
+            }else{
+                nbKept+=1;
+            }
+//            magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
     }
+    cout << nbKept << " ont été gardés." << endl;
+
+
+    merge(planes, 2, complexI);         // Add to the expanded another plane with zeros
+    dft(complexI,complexI, DFT_INVERSE);
+    split(complexI, planes);                   // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
 
 
     // crop the spectrum, if it has an odd number of rows or columns
@@ -79,11 +94,13 @@ int main(int argc, char ** argv)
     q2.copyTo(q1);
     tmp.copyTo(q2);
 
+
     normalize(magI, magI, 0, 255, CV_MINMAX); // Transform the matrix with float values into a
                                             // viewable image form (float between values 0 and 1).
+    normalize(planes[0], planes[0], 0, 255, CV_MINMAX); // Transform the matrix with float values into a
 
 
-    imwrite( "Gray_Image.jpg", magI );
+    imwrite( "Gray_Image.jpg", planes[0] );
 
 //    imshow("Input Image"       , I   );    // Show the result
 //    imshow("spectrum magnitude", magI);
