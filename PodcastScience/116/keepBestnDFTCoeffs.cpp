@@ -46,7 +46,7 @@ int main(int argc, char ** argv)
     std::sort (sorted.begin<float>(), sorted.end<float>(), std::greater <float>());
     
     // Récupération du seuil
-    MatConstIterator_<float> it = magI.begin<float>();
+    MatConstIterator_<float> it = sorted.begin<float>();
     float seuil = it[nbCoeff2Keep];
 
     // seuillage (il existe sans doute une fonction built in)
@@ -63,6 +63,14 @@ int main(int argc, char ** argv)
             }
 //            magI.at<float>(i,j) = magI.at<float>(i,j)>seuil?magI.at<float>(i,j):0.;
     }
+
+
+    magnitude(planes[0], planes[1], magI); 
+    magI += Scalar::all(1);                    // switch to logarithmic scale
+    log(magI, magI);
+
+
+
     cout << nbKept << " ont été gardés." << endl;
 
 
@@ -72,8 +80,12 @@ int main(int argc, char ** argv)
 
 
     normalize(planes[0], planes[0], 0, 255, CV_MINMAX); // Transform the matrix with float values into a
-
     imwrite( argv[3], planes[0] );
+
+
+
+//    normalize(magI,magI,0,255,CV_MINMAX);
+//    imwrite( argv[3], magI);
 
     return 0;
 }
