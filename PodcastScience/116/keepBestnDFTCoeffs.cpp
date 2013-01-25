@@ -73,7 +73,7 @@ int main(int argc, char ** argv)
 
     normalize(planes[0], planes[0], 0, 255, CV_MINMAX); // Transform the matrix with float values into a
 
-    imwrite( "Gray_Image.jpg", planes[0] );
+    imwrite( argv[3], planes[0] );
 
     return 0;
 }
